@@ -12,7 +12,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Hello king!");
 });
 
-app.use(globalErrorHandler);
 app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;
