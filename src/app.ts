@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(cors());
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
   res.send("Hello king!");
 });
 
