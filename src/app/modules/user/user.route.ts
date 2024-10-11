@@ -1,7 +1,8 @@
 import express, { Request, RequestHandler, Response } from "express";
+import { UserControllers } from "./user.controller";
 
 const router = express.Router();
 
-router.post("/create-user", async (req: Request, res: Response) => {
-  const user = req.body;
-});
+router.post("/create-user", UserControllers.createUser);
+
+export const UserRoutes = router;
