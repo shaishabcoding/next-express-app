@@ -3,6 +3,7 @@ import { UserServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { UserValidation } from "./user.validation";
+import { Types } from "mongoose";
 
 const createUser: RequestHandler = async (req, res, next) => {
   const { body } = req;
@@ -33,7 +34,7 @@ const createUser: RequestHandler = async (req, res, next) => {
   }
 };
 
-const getAllUser: RequestHandler = async (req, res, next) => {
+const getAllUser: RequestHandler = async (_req, res, next) => {
   try {
     const users = await UserServices.getAllUserFromDB();
     sendResponse(res, {
@@ -47,7 +48,24 @@ const getAllUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getAUser: RequestHandler = async (req, res, next) => {
+  const id = new Types.ObjectId(req.params.id);
+
+  try {
+    const users = await UserServices.getAUserFromDB(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User is retrieved successfully!",
+      data: users,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const UserControllers = {
   createUser,
   getAllUser,
+  getAUser,
 };
