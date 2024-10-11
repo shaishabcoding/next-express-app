@@ -50,9 +50,28 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.post("save", function (user, next) {
-  user.password = "";
+const cleanPassword = function (doc: TUser | TUser[]) {
+  if (Array.isArray(doc)) {
+    doc.forEach((d) => {
+      d.password = "";
+    });
+  } else {
+    doc.password = "";
+  }
+};
 
+userSchema.post("save", function (doc, next) {
+  cleanPassword(doc);
+  next();
+});
+
+userSchema.post("find", function (docs, next) {
+  cleanPassword(docs);
+  next();
+});
+
+userSchema.post("findOne", function (doc, next) {
+  cleanPassword(doc);
   next();
 });
 

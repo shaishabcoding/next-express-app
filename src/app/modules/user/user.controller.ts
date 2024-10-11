@@ -20,15 +20,34 @@ const createUser: RequestHandler = async (req, res, next) => {
     return;
   }
 
-  const result = await UserServices.createUserIntoDB(user);
-  sendResponse(res, {
-    statusCode: httpStatus.CREATED,
-    success: true,
-    message: "User create successfully!",
-    data: result,
-  });
+  try {
+    const result = await UserServices.createUserIntoDB(user);
+    sendResponse(res, {
+      statusCode: httpStatus.CREATED,
+      success: true,
+      message: "User create successfully!",
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAllUser: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await UserServices.getAllUserFromDB();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Users are retrieved successfully!",
+      data: users,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const UserControllers = {
   createUser,
+  getAllUser,
 };
