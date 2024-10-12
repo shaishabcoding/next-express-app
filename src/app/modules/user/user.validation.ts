@@ -8,7 +8,15 @@ const userValidationSchema = z.object({
   gender: z.enum(["male", "female"]),
   email: z.string().email("Invalid email format"),
   contactNo: z.string().min(1, "Contact number is required"),
-  dateOfBirth: z.date({ required_error: "Date of birth is required" }),
+  dateOfBirth: z.string().refine(
+    (val) => {
+      const date = new Date(val);
+      return !isNaN(date.getTime());
+    },
+    {
+      message: "Invalid date format",
+    }
+  ),
   password: z
     .string()
     .min(1, "Password is required")

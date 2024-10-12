@@ -2,26 +2,15 @@ import { RequestHandler } from "express";
 import { UserServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { UserValidation } from "./user.validation";
 import { Types } from "mongoose";
 import catchAsync from "../../utils/catchAsync";
 
-const createUser: RequestHandler = catchAsync(async (req, res, next) => {
+const createUser: RequestHandler = catchAsync(async (req, res) => {
   const { body } = req;
 
   if (body.dateOfBirth) body.dateOfBirth = new Date(body.dateOfBirth);
 
-  const {
-    success,
-    data: user,
-    error,
-  } = UserValidation.userValidationSchema.safeParse(req.body);
-
-  if (!success) {
-    return next(error);
-  }
-
-  const result = await UserServices.createUserIntoDB(user);
+  const result = await UserServices.createUserIntoDB(body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
