@@ -3,41 +3,61 @@ import bcrypt from "bcrypt";
 import { TUser, TUserMethods, TUserModel } from "./user.interface";
 import config from "../../config";
 
-const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
-  name: {
-    type: {
-      firstName: {
-        type: String,
-        required: true,
+const userSchema = new Schema<TUser, TUserModel, TUserMethods>(
+  {
+    name: {
+      type: {
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
       },
-      lastName: {
-        type: String,
-        required: true,
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    contactNo: {
+      type: String,
+      required: true,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      transform: (_doc, ret) => {
+        delete ret.id;
+        delete ret.__v;
+        delete ret.name._id;
+        delete ret.name.id;
+        delete ret.password;
+        return ret;
       },
     },
-    required: true,
-  },
-  gender: {
-    type: String,
-    enum: ["male", "female"],
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  contactNo: {
-    type: String,
-    required: true,
-  },
-  dateOfBirth: {
-    type: Date,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
+  }
+);
+
+userSchema.virtual("name.fullName").get(function () {
+  return `${this.name.firstName} ${this.name.lastName}`;
 });
 
 userSchema.pre("save", async function (next) {
@@ -47,31 +67,6 @@ userSchema.pre("save", async function (next) {
     Number(config.bcrypt_salt_rounds)
   );
 
-  next();
-});
-
-const cleanPassword = function (doc: TUser | TUser[]) {
-  if (Array.isArray(doc)) {
-    doc.forEach((d) => {
-      d.password = "";
-    });
-  } else {
-    doc.password = "";
-  }
-};
-
-userSchema.post("save", function (doc, next) {
-  cleanPassword(doc);
-  next();
-});
-
-userSchema.post("find", function (docs, next) {
-  cleanPassword(docs);
-  next();
-});
-
-userSchema.post("findOne", function (doc, next) {
-  cleanPassword(doc);
   next();
 });
 
