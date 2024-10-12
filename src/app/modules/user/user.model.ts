@@ -1,9 +1,9 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import bcrypt from "bcrypt";
-import { TUser } from "./user.interface";
+import { TUser, TUserMethods, TUserModel } from "./user.interface";
 import config from "../../config";
 
-const userSchema = new Schema<TUser>({
+const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
   name: {
     type: {
       firstName: {
@@ -74,6 +74,9 @@ userSchema.post("findOne", function (doc, next) {
   cleanPassword(doc);
   next();
 });
+
+userSchema.methods.isUserExist = async (id: Types.ObjectId) =>
+  await User.findById(id);
 
 const User = model<TUser>("User", userSchema);
 
