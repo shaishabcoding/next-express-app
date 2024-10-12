@@ -3,7 +3,6 @@ import app from "./app";
 import mongoose from "mongoose";
 import config from "./app/config";
 
-const port = 3000;
 let server: Server;
 
 async function run() {
@@ -19,9 +18,9 @@ async function run() {
 
 run();
 
-process.on("uncaughtException", (err) => {
-  console.error("🔥 Uncaught Exception detected:", err.message);
-  console.error(err.stack);
+process.on("uncaughtException", (err: any) => {
+  console.error("🔥 Uncaught Exception detected:", err?.message);
+  console.error(err?.stack);
   console.log("🔥 Shutting down due to uncaught exception...");
 
   process.exit(1);
