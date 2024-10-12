@@ -4,8 +4,9 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { UserValidation } from "./user.validation";
 import { Types } from "mongoose";
+import catchAsync from "../../utils/catchAsync";
 
-const createUser: RequestHandler = async (req, res, next) => {
+const createUser: RequestHandler = catchAsync(async (req, res, next) => {
   const { body } = req;
 
   if (body.dateOfBirth) body.dateOfBirth = new Date(body.dateOfBirth);
@@ -17,52 +18,39 @@ const createUser: RequestHandler = async (req, res, next) => {
   } = UserValidation.userValidationSchema.safeParse(req.body);
 
   if (!success) {
-    next(error);
-    return;
+    return next(error);
   }
 
-  try {
-    const result = await UserServices.createUserIntoDB(user);
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "User create successfully!",
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+  const result = await UserServices.createUserIntoDB(user);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User create successfully!",
+    data: result,
+  });
+});
 
-const getAllUser: RequestHandler = async (_req, res, next) => {
-  try {
-    const users = await UserServices.getAllUserFromDB();
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Users are retrieved successfully!",
-      data: users,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+const getAllUser: RequestHandler = catchAsync(async (_req, res) => {
+  const users = await UserServices.getAllUserFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users are retrieved successfully!",
+    data: users,
+  });
+});
 
-const getAUser: RequestHandler = async (req, res, next) => {
+const getAUser: RequestHandler = catchAsync(async (req, res) => {
   const id = new Types.ObjectId(req.params.id);
 
-  try {
-    const users = await UserServices.getAUserFromDB(id);
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "User is retrieved successfully!",
-      data: users,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+  const users = await UserServices.getAUserFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User is retrieved successfully!",
+    data: users,
+  });
+});
 
 export const UserControllers = {
   createUser,
