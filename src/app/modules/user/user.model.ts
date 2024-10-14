@@ -57,7 +57,7 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>(
 );
 
 userSchema.virtual("name.fullName").get(function () {
-  return `${this.name.firstName} ${this.name.lastName}`;
+  return `${this.name?.firstName} ${this.name?.lastName}`;
 });
 
 userSchema.pre("save", async function (next) {
