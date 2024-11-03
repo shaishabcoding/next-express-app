@@ -12,4 +12,6 @@ export default {
   bcrypt_salt_rounds: +(process.env.BCRYPT_SALT_ROUNDS || 0),
   jwt_access_token_secret: process.env.JWT_ACCESS_TOKEN_SECRET || "",
   jwt_refresh_token_secret: process.env.JWT_REFRESH_TOKEN_SECRET || "",
+  jwt_access_token_expire: process.env.JWT_ACCESS_TOKEN_EXPIRE || "1d",
+  jwt_refresh_token_expire: process.env.JWT_REFRESH_TOKEN_EXPIRE || "15d",
 };

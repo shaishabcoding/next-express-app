@@ -11,6 +11,7 @@ export type TUser = {
   dateOfBirth: Date;
   contactNo: string;
   role: "USER" | "ADMIN";
+  status: "ACTIVE" | "SUSPENDED" | "DELETED";
 };
 
 export type TUserMethods = {

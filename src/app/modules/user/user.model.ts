@@ -3,49 +3,57 @@ import bcrypt from "bcrypt";
 import { TUser, TUserMethods, TUserModel } from "./user.interface";
 import config from "../../config";
 
-const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
-  name: {
-    type: {
-      firstName: {
-        type: String,
-        required: true,
+const userSchema = new Schema<TUser, TUserModel, TUserMethods>(
+  {
+    name: {
+      type: {
+        firstName: {
+          type: String,
+          required: true,
+        },
+        lastName: {
+          type: String,
+          required: true,
+        },
       },
-      lastName: {
-        type: String,
-        required: true,
-      },
+      required: true,
     },
-    required: true,
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    contactNo: {
+      type: String,
+      required: true,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ["ADMIN", "USER"],
+      default: "USER",
+    },
+    status: {
+      type: String,
+      enum: ["ACTIVE", "SUSPENDED", "DELETED"],
+      default: "ACTIVE",
+    },
   },
-  gender: {
-    type: String,
-    enum: ["male", "female"],
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  contactNo: {
-    type: String,
-    required: true,
-  },
-  dateOfBirth: {
-    type: Date,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    select: 0,
-  },
-  role: {
-    type: String,
-    enum: ["ADMIN", "USER"],
-    default: "USER",
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.virtual("name.fullName").get(function () {
   return `${this.name?.firstName} ${this.name?.lastName}`;
