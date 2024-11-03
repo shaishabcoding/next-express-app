@@ -10,6 +10,7 @@ export type TUser = {
   password: string;
   dateOfBirth: Date;
   contactNo: string;
+  role: "USER" | "ADMIN";
 };
 
 export type TUserMethods = {

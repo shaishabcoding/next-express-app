@@ -40,6 +40,11 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
     required: true,
     select: 0,
   },
+  role: {
+    type: String,
+    enum: ["ADMIN", "USER"],
+    default: "USER",
+  },
 });
 
 userSchema.virtual("name.fullName").get(function () {
@@ -48,10 +53,7 @@ userSchema.virtual("name.fullName").get(function () {
 
 userSchema.pre("save", async function (next) {
   const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
-  );
+  user.password = await bcrypt.hash(user.password, config.bcrypt_salt_rounds);
 
   next();
 });
