@@ -10,6 +10,8 @@ const loginValidationSchema = z.object({
   }),
 });
 
+export type TLoginUser = z.infer<typeof loginValidationSchema.shape.body>;
+
 export const AuthValidation = {
   loginValidationSchema,
 };
