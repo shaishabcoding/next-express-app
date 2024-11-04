@@ -33,17 +33,9 @@ const loginUser = async ({ email, password }: TLoginUser) => {
     role: user.role,
   };
 
-  const accessToken = createToken(
-    jwtPayload,
-    config.jwt_access_token_secret,
-    config.jwt_access_token_expire
-  );
+  const accessToken = createToken(jwtPayload, "access");
 
-  const refreshToken = createToken(
-    jwtPayload,
-    config.jwt_refresh_token_secret,
-    config.jwt_refresh_token_expire
-  );
+  const refreshToken = createToken(jwtPayload, "refresh");
 
   return { accessToken, refreshToken };
 };
