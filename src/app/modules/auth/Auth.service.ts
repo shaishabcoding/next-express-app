@@ -2,10 +2,10 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import User from "../user/user.model";
 import { TLoginUser } from "./Auth.validation";
-import jwt from "jsonwebtoken";
-import config from "../../config";
 import bcrypt from "bcrypt";
 import { createToken } from "./Auth.utils";
+import { TUser } from "../user/user.interface";
+import config from "../../config";
 
 const loginUser = async ({ email, password }: TLoginUser) => {
   const user = await User.findOne({
@@ -40,6 +40,35 @@ const loginUser = async ({ email, password }: TLoginUser) => {
   return { accessToken, refreshToken };
 };
 
+const changePassword = async (
+  user: TUser,
+  {
+    newPassword,
+    oldPassword,
+  }: {
+    newPassword: string;
+    oldPassword: string;
+  }
+) => {
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+  if (!isPasswordValid) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Incorrect password!");
+  }
+
+  newPassword = await bcrypt.hash(newPassword, config.bcrypt_salt_rounds);
+
+  console.log(newPassword);
+  await User.updateOne(
+    {
+      email: user.email,
+    },
+    {
+      password: newPassword,
+    }
+  );
+};
+
 export const AuthServices = {
   loginUser,
+  changePassword,
 };

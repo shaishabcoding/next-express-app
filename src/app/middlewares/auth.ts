@@ -17,7 +17,7 @@ export const auth = (...roles: ("ADMIN" | "USER")[]) => {
 
       const user = await User.findOne({
         email,
-      });
+      }).select("+password");
 
       if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, "User not found!");
