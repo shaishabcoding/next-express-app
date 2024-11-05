@@ -6,7 +6,7 @@ import { auth } from "../../middlewares/auth";
 
 const router = express.Router();
 
-router.get("/", auth("ADMIN"), UserControllers.getAllUser);
+router.get("/", auth(["ADMIN"]), UserControllers.getAllUser);
 router.get("/:id", UserControllers.getAUser);
 router.post(
   "/create-user",

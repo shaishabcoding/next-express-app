@@ -85,8 +85,24 @@ const forgetPassword = async ({ email, role }: TUser) => {
   });
 };
 
+const resetPassword = async ({ email, role }: TUser) => {
+  const jwtPayload = {
+    email,
+    role,
+  };
+
+  const resetToken = createToken(jwtPayload, "reset");
+
+  await sendMail({
+    to: email,
+    subject: "Password Reset Request",
+    body: makeResetBody(resetToken),
+  });
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
   forgetPassword,
+  resetPassword,
 };

@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../errors/AppError";
 import httpStatus from "http-status";
-import { verifyToken } from "../modules/auth/Auth.utils";
+import { TTokenType, verifyToken } from "../modules/auth/Auth.utils";
 import User from "../modules/user/user.model";
+export type TRole = "ADMIN" | "USER" | "SUPER_ADMIN";
 
-export const auth = (...roles: ("ADMIN" | "USER")[]) => {
+export const auth = (roles: TRole[], type: TTokenType = "access") => {
   return catchAsync(
     async (req: Request, _res: Response, next: NextFunction) => {
       const token = req.headers.authorization;
@@ -13,7 +14,7 @@ export const auth = (...roles: ("ADMIN" | "USER")[]) => {
         throw new AppError(httpStatus.UNAUTHORIZED, "Access Denied!");
       }
 
-      const { email } = verifyToken(token, "access");
+      const { email } = verifyToken(token, type);
 
       const user = await User.findOne({
         email,
