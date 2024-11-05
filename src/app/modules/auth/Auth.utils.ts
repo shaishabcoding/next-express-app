@@ -35,10 +35,10 @@ export const verifyToken = (token: string, type: TTokenType) => {
     case "access":
       user = jwt.verify(token, config.jwt_access_token_secret) as JwtPayload;
       break;
-    case "reset":
+    case "refresh":
       user = jwt.verify(token, config.jwt_refresh_token_secret) as JwtPayload;
       break;
-    case "refresh":
+    case "reset":
       user = jwt.verify(token, config.jwt_access_token_secret) as JwtPayload;
   }
 

@@ -33,6 +33,17 @@ const changePassword: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const refreshToken: RequestHandler = catchAsync(async (req, res) => {
+  const result = await AuthServices.refreshToken(req.cookies.refreshToken);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "New Access create successfully!",
+    data: result,
+  });
+});
+
 const forgetPassword: RequestHandler = catchAsync(async (req, res) => {
   await AuthServices.forgetPassword(req.user);
 
@@ -60,4 +71,5 @@ export const AuthController = {
   changePassword,
   forgetPassword,
   resetPassword,
+  refreshToken,
 };

@@ -3,7 +3,7 @@ import AppError from "../../errors/AppError";
 import User from "../user/user.model";
 import { TLoginUser } from "./Auth.validation";
 import bcrypt from "bcrypt";
-import { createToken } from "./Auth.utils";
+import { createToken, verifyToken } from "./Auth.utils";
 import { TUser } from "../user/user.interface";
 import config from "../../config";
 import { sendMail } from "../../utils/sendMail";
@@ -40,6 +40,38 @@ const loginUser = async ({ email, password }: TLoginUser) => {
   const refreshToken = createToken(jwtPayload, "refresh");
 
   return { accessToken, refreshToken };
+};
+
+const refreshToken = async (token: string) => {
+  if (!token) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Access Denied!");
+  }
+
+  const { email } = verifyToken(token, "refresh");
+
+  const user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found!");
+  }
+
+  if (user.status !== "ACTIVE") {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Account is not active. Please contact support."
+    );
+  }
+
+  const jwtPayload = {
+    email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(jwtPayload, "access");
+
+  return { accessToken };
 };
 
 const changePassword = async (
@@ -105,4 +137,5 @@ export const AuthServices = {
   changePassword,
   forgetPassword,
   resetPassword,
+  refreshToken,
 };

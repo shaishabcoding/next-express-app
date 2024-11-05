@@ -23,6 +23,14 @@ const passwordChangeValidationSchema = z.object({
   }),
 });
 
+const refreshTokenValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: "refreshToken is missing",
+    }),
+  }),
+});
+
 export type TLoginUser = z.infer<typeof loginValidationSchema.shape.body>;
 export type TPasswordChange = z.infer<
   typeof passwordChangeValidationSchema.shape.body
@@ -31,4 +39,5 @@ export type TPasswordChange = z.infer<
 export const AuthValidation = {
   loginValidationSchema,
   passwordChangeValidationSchema,
+  refreshTokenValidationSchema,
 };
