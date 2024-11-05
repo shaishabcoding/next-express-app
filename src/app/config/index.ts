@@ -14,4 +14,7 @@ export default {
   jwt_refresh_token_secret: process.env.JWT_REFRESH_TOKEN_SECRET || "",
   jwt_access_token_expire: process.env.JWT_ACCESS_TOKEN_EXPIRE || "1d",
   jwt_refresh_token_expire: process.env.JWT_REFRESH_TOKEN_EXPIRE || "15d",
+  mail: process.env.MAIL || "",
+  mail_pass: process.env.MAIL_PASS || "",
+  reset_pass_ui_link: process.env.RESET_PASS_UI_LINK || "",
 };

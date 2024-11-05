@@ -18,4 +18,9 @@ router.patch(
   AuthController.changePassword
 );
 
+router.post(
+  "/forget-password",
+  auth("USER", "ADMIN"),
+  AuthController.forgetPassword
+);
 export const AuthRoutes = router;

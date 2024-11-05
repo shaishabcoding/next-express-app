@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 import { createToken } from "./Auth.utils";
 import { TUser } from "../user/user.interface";
 import config from "../../config";
+import { sendMail } from "../../utils/sendMail";
+import { makeResetBody } from "./Auth.constant";
 
 const loginUser = async ({ email, password }: TLoginUser) => {
   const user = await User.findOne({
@@ -68,7 +70,23 @@ const changePassword = async (
   );
 };
 
+const forgetPassword = async ({ email, role }: TUser) => {
+  const jwtPayload = {
+    email,
+    role,
+  };
+
+  const resetToken = createToken(jwtPayload, "reset");
+
+  await sendMail({
+    to: email,
+    subject: "Password Reset Request",
+    body: makeResetBody(resetToken),
+  });
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
+  forgetPassword,
 };
