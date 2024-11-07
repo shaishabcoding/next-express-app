@@ -10,7 +10,7 @@ export type TUser = {
   password: string;
   dateOfBirth: Date;
   contactNo: string;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "SUPER_ADMIN";
   status: "ACTIVE" | "SUSPENDED" | "DELETED";
 };
 

@@ -17,4 +17,6 @@ export default {
   mail: process.env.MAIL || "",
   mail_pass: process.env.MAIL_PASS || "",
   reset_pass_ui_link: process.env.RESET_PASS_UI_LINK || "",
+  super_admin_email: process.env.SUPER_ADMIN_EMAIL || "",
+  super_admin_pass: process.env.SUPER_ADMIN_PASS || "",
 };

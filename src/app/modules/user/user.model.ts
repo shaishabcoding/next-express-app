@@ -43,7 +43,7 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER"],
+      enum: ["ADMIN", "USER", "SUPER_ADMIN"],
       default: "USER",
     },
     status: {
