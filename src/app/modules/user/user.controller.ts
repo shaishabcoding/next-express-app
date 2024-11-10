@@ -30,9 +30,9 @@ const getAllUser: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getAUser: RequestHandler = catchAsync(async (req, res) => {
-  const id = new Types.ObjectId(req.params.id);
+  const { email } = req.params;
 
-  const users = await UserServices.getAUserFromDB(id);
+  const users = await UserServices.getAUserFromDB(email);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

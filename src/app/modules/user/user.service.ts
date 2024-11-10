@@ -21,7 +21,10 @@ const getAllUserFromDB = async (query: QueryParams) => {
     users,
   };
 };
-const getAUserFromDB = async (id: Types.ObjectId) => await User.findById(id);
+const getAUserFromDB = async (email: string) =>
+  await User.findOne({
+    email,
+  });
 
 export const UserServices = {
   createUserIntoDB,
