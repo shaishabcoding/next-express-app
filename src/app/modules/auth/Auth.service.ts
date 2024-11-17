@@ -30,15 +30,26 @@ const loginUser = async ({ email, password }: TLoginUser) => {
     throw new AppError(httpStatus.UNAUTHORIZED, "Incorrect password!");
   }
 
+  const {
+    contactNo,
+    dateOfBirth,
+    gender,
+    name: { firstName, lastName },
+    role,
+  } = user.toJSON();
+
   const partialUser: Partial<TUser> = {
-    ...user?.toJSON(),
+    email,
+    contactNo,
+    dateOfBirth,
+    gender,
+    name: { firstName, lastName },
+    role,
   };
 
   const jwtPayload = {
     email,
   };
-
-  delete partialUser.password;
 
   const accessToken = createToken(jwtPayload, "access");
 
