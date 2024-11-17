@@ -30,16 +30,21 @@ const loginUser = async ({ email, password }: TLoginUser) => {
     throw new AppError(httpStatus.UNAUTHORIZED, "Incorrect password!");
   }
 
+  const partialUser: Partial<TUser> = {
+    ...user?.toJSON(),
+  };
+
   const jwtPayload = {
     email,
-    role: user.role,
   };
+
+  delete partialUser.password;
 
   const accessToken = createToken(jwtPayload, "access");
 
   const refreshToken = createToken(jwtPayload, "refresh");
 
-  return { accessToken, refreshToken };
+  return { accessToken, user: partialUser, refreshToken };
 };
 
 const refreshToken = async (token: string) => {
@@ -66,7 +71,6 @@ const refreshToken = async (token: string) => {
 
   const jwtPayload = {
     email,
-    role: user.role,
   };
 
   const accessToken = createToken(jwtPayload, "access");
@@ -102,10 +106,9 @@ const changePassword = async (
   );
 };
 
-const forgetPassword = async ({ email, role }: TUser) => {
+const forgetPassword = async ({ email }: TUser) => {
   const jwtPayload = {
     email,
-    role,
   };
 
   const resetToken = createToken(jwtPayload, "reset");
@@ -117,10 +120,9 @@ const forgetPassword = async ({ email, role }: TUser) => {
   });
 };
 
-const resetPassword = async ({ email, role }: TUser) => {
+const resetPassword = async ({ email }: TUser) => {
   const jwtPayload = {
     email,
-    role,
   };
 
   const resetToken = createToken(jwtPayload, "reset");

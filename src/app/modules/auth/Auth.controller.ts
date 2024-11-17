@@ -7,7 +7,9 @@ import config from "../../config";
 
 const login: RequestHandler = catchAsync(async (req, res) => {
   const { body } = req;
-  const { accessToken, refreshToken } = await AuthServices.loginUser(body);
+  const { accessToken, refreshToken, user } = await AuthServices.loginUser(
+    body
+  );
 
   res.cookie("refreshToken", refreshToken, {
     secure: config.node_env !== "development",
@@ -18,7 +20,7 @@ const login: RequestHandler = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Login successfully!",
-    data: { accessToken },
+    data: { token: accessToken, user },
   });
 });
 
